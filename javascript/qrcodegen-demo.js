@@ -27,7 +27,7 @@
 var app = new function() {
 	
 	function initialize() {
-		var elems = document.querySelectorAll("input[type=number], textarea");
+		var elems = document.querySelectorAll("input[type=number]");
 		for (var i = 0; i < elems.length; i++) {
 			if (elems[i].id.indexOf("version-") != 0)
 				elems[i].oninput = redrawQrCode;
@@ -35,9 +35,28 @@ var app = new function() {
 		elems = document.querySelectorAll("input[type=radio], input[type=checkbox]");
 		for (var i = 0; i < elems.length; i++)
 			elems[i].onchange = redrawQrCode;
+        
+        elems = document.querySelectorAll("textarea");
+		for (var i = 0; i < elems.length; i++) {
+            if (elems[i].id != "svg-xml-output")
+                elems[i].oninput = redrawQrCode;
+            else
+                elems[i].onchange = xmlChangeRedraw;
+        }
+
 		redrawQrCode();
 	}
 	
+    function xmlChangeRedraw() {
+        var bitmapOutput = document.getElementById("output-format-bitmap").checked;
+        var svgXml = document.getElementById("svg-xml-output");
+        var svg = document.getElementById("qrcode-svg");
+        if (!bitmapOutput) {
+            svg.innerHTML = svgXml.value;
+        }
+        var dlBtn = document.getElementById("download")
+        dlBtn.setAttribute('href','data:text/plain;charset=utf-8,' + encodeURIComponent(svgXml.value));
+    }
 	
 	function redrawQrCode() {
 		// Show/hide rows based on bitmap/vector image output
@@ -95,9 +114,13 @@ var app = new function() {
 		} else {
 			var code = qr.toSvgString(border);
 			svg.setAttribute("viewBox", / viewBox="([^"]*)"/.exec(code)[1]);
-			svg.querySelector("path").setAttribute("d", / d="([^"]*)"/.exec(code)[1]);
+			// svg.querySelector("path").setAttribute("d", / d="([^"]*)"/.exec(code)[1]);
+            //console.log(code.innerHTML);
+            svg.innerHTML = qr.toSvgString(border);
 			svg.style.removeProperty("display");
 			svgXml.value = qr.toSvgString(border);
+            var dlBtn = document.getElementById("download")
+            dlBtn.setAttribute('href','data:text/plain;charset=utf-8,' + encodeURIComponent(svgXml.value));
 		}
 		
 		// Returns a string to describe the given list of segments.
