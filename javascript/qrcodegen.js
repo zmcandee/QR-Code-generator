@@ -187,18 +187,63 @@ var qrcodegen = new function() {
 			if (border < 0)
 				throw "Border must be non-negative";
 			var parts = [];
+            var timing = [];
 			for (var y = 0; y < size; y++) {
 				for (var x = 0; x < size; x++) {
-					if (this.getModule(x, y))
-						parts.push("M" + (x + border) + "," + (y + border) + "h1v1h-1z");
+                    if (this.getModule(x, y))
+                        if (x==(6) && y>(7) && y<(size-7) || y==(6) && x>(7) && x<(size-7))
+                            timing.push("       <use x=\""+(x + border)*25+"\" y=\""+(y + border)*25+"\" href=\"#pip\"/>");
+                            //continue
+                        else if (x<7 && (y<7 || y>=(size-7)) || (y<7 && x>=(size-7))) 
+                            continue
+                        else if (size!=21 && (x<(size-4) && x>=(size-9) && y<(size-4) && y>=(size-9)))
+                            continue
+                        else
+                        parts.push("   <use x=\""+(x + border)*25+"\" y=\""+(y + border)*25+"\" href=\"#pip\"/>");
 				}
 			}
-			return '<?xml version="1.0" encoding="UTF-8"?>\n' +
-				'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n' +
-				'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' +
-					(size + border * 2) + ' ' + (size + border * 2) + '" stroke="none">\n' +
-				'\t<rect width="100%" height="100%" fill="#FFFFFF"/>\n' +
-				'\t<path d="' + parts.join(" ") + '" fill="#000000"/>\n' +
+			return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' +
+					(size + border * 2) * 25 + ' ' + (size + border * 2) * 25 + '" stroke="none">\n' +
+				'<defs>\n' +
+              //  '    <g id="logo">\n' +
+              //  '        <path fill="#fff" d="M-75 -75M0 75a75 75,0,1,1,150 0a75 75,0,1,1,-150 0z"/>\n' +
+              //  '        <path fill="#414142" d="M-75 -75M20 76h11v29H20zM36 67h11v38H36zM87 41h11v64H87zM103 77h11v28H103zM119 88h11v17H119z"/>\n' +
+              //  '        <path fill="#cf4826" d="M-75 -75M53 61h11v44H53zM53 34h11v20H53zM70 61h11v44H70zM70 30h11v24H70z"/>\n' +
+              //  '    </g>\n' +
+                '    <circle id="pip" fill="#414141" cx="12.5" cy="12.5" r="12.5"/>\n' +
+                '    <path id="pip.rounded" fill="#414141" d="M0 10V15Q0 25 10 25H15Q25 25 25 15V10Q25 0 15 0H10Q0 0 0 10z"/>\n' +
+                '    <path id="pip.whimsy" fill="#414141" d="M0 15V20Q0 25 15 25H20Q25 25 25 10V5Q25 0 10 0H5Q0 0 0 15z"/>\n' +
+                '    <g id="locator">\n' +
+                '        <path fill="#cf4826" d="M87.5 87.5h-125a50 50,0,0,1,-50 -50v-75a50 50,0,0,1,50 -50h75a50 50,0,0,1,50 50z M62.5 62.5h-100a25 25,0,0,1,-25 -25v-75a25 25,0,0,1,25 -25h75a25 25,0,0,1,25 25z" fill-rule="evenodd"/>\n' +
+                '        <path fill="#414141" d="M37.5 37.5h-62.5a12.5 12.5,0,0,1,-12.5 -12.5v-50a12.5 12.5,0,0,1,12.5 -12.5h50a12.5 12.5,0,0,1,12.5 12.5z"/>\n' +
+                '    </g>\n' +
+                '    <g id="alignment">\n' +
+                '        <path fill="#cf4826" d="M62.5 62.5h-100a25 25,0,0,1,-25 -25v-75a25 25,0,0,1,25 -25h75a25 25,0,0,1,25 25z M37.5 37.5h-62.5a12.5 12.5,0,0,1,-12.5 -12.5v-50a12.5 12.5,0,0,1,12.5 -12.5h50a12.5 12.5,0,0,1,12.5 12.5z" fill-rule="evenodd"/>\n' +
+                '        <path fill="#414141" d="M-12.5 -12.5m0 10a10 10,0,0,1,10 -10h5a10 10,0,0,1,10 10v15h-15a10 10,0,0,1,-10 -10z"/>\n' +
+                '    </g>\n' +
+              //  '    <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">\n' +
+              //  '        <path d="M 25 0 L 0 0 0 25" fill="#fff" stroke="#000" stroke-width="1"/>\n' +
+              //  '    </pattern>\n' +
+              //  '    <pattern id="timing" width="50" height="50" x="'+border*25+'" y="'+border*25+'" patternUnits="userSpaceOnUse">\n' +
+              //  '        <use x="0" y="0" href="#pip"/>\n' +
+              //  '    </pattern>\n' +
+                '</defs>\n' +
+                '<rect width="100%" height="100%" fill="#fff"/>\n' +
+                '<g id="guides">\n' +
+                '   <use x="'+((border+3.5)*25)+'"  y="'+((border+3.5)*25)+'"   href="#locator" transform="rotate(0,'+((border+3.5)*25)+','+((border+3.5)*25)+')"/>\n' +
+                '   <use x="'+((size+border-3.5)*25)+'"  y="'+((border+3.5)*25)+'"   href="#locator" transform="rotate(90,'+((size+border-3.5)*25)+','+((border+3.5)*25)+')"/>\n' +
+                '   <use x="'+((border+3.5)*25)+'"  y="'+((size+border-3.5)*25)+'"   href="#locator" transform="rotate(270,'+((border+3.5)*25)+','+((size+border-3.5)*25)+')"/>\n' +
+                (size!=21?'   <use x="'+((size+border-6.5)*25)+'"  y="'+((size+border-6.5)*25)+'"   href="#alignment" transform="rotate(180,'+((size+border-6.5)*25)+','+((size+border-6.5)*25)+')"/>\n':'') +
+                '   <g id="timing">\n' +
+                timing.join('\n')+'\n' +
+                '   </g>\n' +
+              //  '   <rect height="25" x="'+(border+8)*25+'" width="'+(size-16)*25+'" y="'+(border+6)*25+'" fill="url(#timing)"/>\n' +
+              //  '   <rect width="25" y="'+(border+8)*25+'" height="'+(size-16)*25+'" x="'+(border+6)*25+'" fill="url(#timing)"/>\n' +
+                '</g>\n' +
+                '<g id="data">\n'+
+                parts.join("\n")+'\n' +
+                '</g>\n' +
+              //  '<use  x="'+(size + border * 2) * 12.5+'"  y="'+(size + border * 2) * 12.5+'"   transform="scale(2 2)" href=\"#logo\"/>\n' +
 				'</svg>\n';
 		};
 		
