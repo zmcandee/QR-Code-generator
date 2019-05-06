@@ -192,17 +192,18 @@ var qrcodegen = new function() {
 				for (var x = 0; x < size; x++) {
                     if (this.getModule(x, y))
                         if (x==(6) && y>(7) && y<(size-7) || y==(6) && x>(7) && x<(size-7))
-                            timing.push("       <use x=\""+(x + border)*25+"\" y=\""+(y + border)*25+"\" href=\"#pip\"/>");
+                            timing.push("       <use x=\""+(x + border)*25+"\" y=\""+(y + border)*25+"\" xlink:href=\"#pip\"/>");
                             //continue
                         else if (x<7 && (y<7 || y>=(size-7)) || (y<7 && x>=(size-7))) 
                             continue
                         else if (size!=21 && (x<(size-4) && x>=(size-9) && y<(size-4) && y>=(size-9)))
                             continue
                         else
-                        parts.push("   <use x=\""+(x + border)*25+"\" y=\""+(y + border)*25+"\" href=\"#pip\"/>");
+                        parts.push("   <use x=\""+(x + border)*25+"\" y=\""+(y + border)*25+"\" xlink:href=\"#pip\"/>");
 				}
 			}
-			return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ' +
+			return '<?xml version="1.0" standalone="no"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >\n' +
+				'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 ' +
 					(size + border * 2) * 25 + ' ' + (size + border * 2) * 25 + '" stroke="none">\n' +
 				'<defs>\n' +
               //  '    <g id="logo">\n' +
@@ -230,10 +231,10 @@ var qrcodegen = new function() {
                 '</defs>\n' +
                 '<rect width="100%" height="100%" fill="#fff"/>\n' +
                 '<g id="guides">\n' +
-                '   <use x="'+((border+3.5)*25)+'"  y="'+((border+3.5)*25)+'"   href="#locator" transform="rotate(0,'+((border+3.5)*25)+','+((border+3.5)*25)+')"/>\n' +
-                '   <use x="'+((size+border-3.5)*25)+'"  y="'+((border+3.5)*25)+'"   href="#locator" transform="rotate(90,'+((size+border-3.5)*25)+','+((border+3.5)*25)+')"/>\n' +
-                '   <use x="'+((border+3.5)*25)+'"  y="'+((size+border-3.5)*25)+'"   href="#locator" transform="rotate(270,'+((border+3.5)*25)+','+((size+border-3.5)*25)+')"/>\n' +
-                (size!=21?'   <use x="'+((size+border-6.5)*25)+'"  y="'+((size+border-6.5)*25)+'"   href="#alignment" transform="rotate(180,'+((size+border-6.5)*25)+','+((size+border-6.5)*25)+')"/>\n':'') +
+                '   <use x="'+((border+3.5)*25)+'"  y="'+((border+3.5)*25)+'"   xlink:href="#locator" transform="rotate(0,'+((border+3.5)*25)+','+((border+3.5)*25)+')"/>\n' +
+                '   <use x="'+((size+border-3.5)*25)+'"  y="'+((border+3.5)*25)+'"   xlink:href="#locator" transform="rotate(90,'+((size+border-3.5)*25)+','+((border+3.5)*25)+')"/>\n' +
+                '   <use x="'+((border+3.5)*25)+'"  y="'+((size+border-3.5)*25)+'"   xlink:href="#locator" transform="rotate(270,'+((border+3.5)*25)+','+((size+border-3.5)*25)+')"/>\n' +
+                (size!=21?'   <use x="'+((size+border-6.5)*25)+'"  y="'+((size+border-6.5)*25)+'"   xlink:href="#alignment" transform="rotate(180,'+((size+border-6.5)*25)+','+((size+border-6.5)*25)+')"/>\n':'') +
                 '   <g id="timing">\n' +
                 timing.join('\n')+'\n' +
                 '   </g>\n' +
@@ -243,7 +244,7 @@ var qrcodegen = new function() {
                 '<g id="data">\n'+
                 parts.join("\n")+'\n' +
                 '</g>\n' +
-              //  '<use  x="'+(size + border * 2) * 12.5+'"  y="'+(size + border * 2) * 12.5+'"   transform="scale(2 2)" href=\"#logo\"/>\n' +
+              //  '<use  x="'+(size + border * 2) * 12.5+'"  y="'+(size + border * 2) * 12.5+'"   transform="scale(2 2)" xlink:href=\"#logo\"/>\n' +
 				'</svg>\n';
 		};
 		
